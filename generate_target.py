@@ -4,23 +4,23 @@ import random as rand
 import string
 from PIL import Image, ImageDraw, ImageFont
 
-root = "/home/matt/documents/research/uav/synthetic_imagery_generation/"
+root = "./"
 
 shape_dir = root + "shapes/"
 background_dir = root + "backgrounds/"
 font_dir = root + "fonts/"
-target_dir = root + "synthetic_targets/"
 
 train_dir = root + "../hough_forests_cropped_positive_100_pos_100_neg/"
 
-NUM_TEST_IMAGES = 100
+NUM_TEST_IMAGES = 1000
 
 def main():
-    if len(sys.argv) is not 2:
-        print "Usage: python generate_test_image.py shape_file"
+    if len(sys.argv) is not 3:
+        print "Usage: python generate_test_image.py shape_file out_dir"
         exit(1)
 
     shapefile = sys.argv[1]
+    out_dir   = sys.argv[2]
 
     shapename = os.path.basename(shapefile).split('.')[0]
 
@@ -28,11 +28,8 @@ def main():
     for i in range(NUM_TEST_IMAGES):
         image,l = make_image(shapefile)
 
-        if not os.path.exists(train_dir + shapename + "_detector/trainimage"):
-            os.makedirs(train_dir + shapename + "_detector/trainimage")
-
-        fname = train_dir + shapename + "_detector/trainimage/pos%03d.png" % i
-        image.save(fname)
+        fname = shapename + "%03d.png" % i
+        image.save(os.path.join(out_dir,fname)
         print "pos%03d.png %d %d %d %d %d %d" % (i, l[0], l[1], l[2], l[3],
                 l[2] - l[0], l[3] - l[1])
 
